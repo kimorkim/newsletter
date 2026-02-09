@@ -4,21 +4,61 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>기술 뉴스 오디오</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; line-height: 1.5; }
+    .box { max-width: 720px; }
+    .muted { color: #666; font-size: 14px; }
+    audio { width: 100%; max-width: 560px; }
+    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+  </style>
 </head>
 <body>
-  <h3>오늘의 기술 뉴스 오디오</h3>
+  <div class="box">
+    <h3>오늘의 기술 뉴스 오디오</h3>
+    <p class="muted">
+      사용법: <code>?date=YYYY-MM-DD</code> 예) <code>?date=2026-02-09</code>
+    </p>
 
-  <audio controls preload="none" style="width: 100%; max-width: 560px;">
-    <source src="https://raw.githubusercontent.com/kimorkim/newsletter/main/%EC%98%A4%EB%94%94%EC%98%A4/2026-02-09.mp3" type="audio/mpeg">
-    브라우저에서 오디오를 재생할 수 없습니다.
-    <a href="https://raw.githubusercontent.com/kimorkim/newsletter/main/%EC%98%A4%EB%94%94%EC%98%A4/2026-02-09.mp3">MP3 다운로드</a>
-  </audio>
+    <p id="status" class="muted"></p>
 
-  <p>
-    직접 다운로드:
-    <a href="https://raw.githubusercontent.com/kimorkim/newsletter/main/%EC%98%A4%EB%94%94%EC%98%A4/2026-02-09.mp3">
-      2026-02-09.mp3
-    </a>
-  </p>
+    <audio id="player" controls preload="none">
+      <source id="source" src="" type="audio/mpeg">
+      브라우저에서 오디오를 재생할 수 없습니다.
+    </audio>
+
+    <p>
+      직접 다운로드:
+      <a id="download" href="#" rel="noopener">MP3 다운로드</a>
+    </p>
+  </div>
+
+  <script>
+    // 1) date 파라미터 읽기
+    const params = new URLSearchParams(window.location.search);
+    const date = params.get('date'); // 예: "2026-02-09" [web:376]
+
+    // 2) 기본값: 파라미터 없으면 오늘 날짜(로컬)
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const finalDate = (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) ? date : `${yyyy}-${mm}-${dd}`;
+
+    // 3) mp3 URL 만들기 (GitHub raw)
+    const base = 'https://raw.githubusercontent.com/kimorkim/newsletter/main/';
+    const url = `${base}%EC%98%A4%EB%94%94%EC%98%A4/${finalDate}.mp3`;
+
+    // 4) 플레이어에 주입
+    const statusEl = document.getElementById('status');
+    const audioEl = document.getElementById('player');
+    const sourceEl = document.getElementById('source');
+    const downloadEl = document.getElementById('download');
+
+    statusEl.textContent = `재생 날짜: ${finalDate}`;
+    sourceEl.src = url;                 // audio src 동적 설정 [web:385]
+    downloadEl.href = url;
+
+    audioEl.load(); // src 바뀐 걸 반영해서 다시 로드 [web:387]
+  </script>
 </body>
 </html>
