@@ -1,0 +1,14 @@
+{
+  "date": "2026-02-10",
+  "brand": "Tech Pulse",
+  "buildLabel": "LIVE BUILD v4.2.0",
+  "title": "Architecture of the Future",
+  "subtitle": "DAILY DEVELOPER BRIEFING",
+  "episode": "#42",
+  "host": "Sarah Connors",
+  "duration": "45:00",
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/assets/covers/2026-02-10.jpg",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": ["AI", "Cloud", "Web"],
+  "footerNote": "Build with Tailwind CSS"
+}
