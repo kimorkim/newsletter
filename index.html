@@ -192,9 +192,10 @@
 
     .title {
       margin: 20px 0 8px;
-      font-size: clamp(28px, 5.8vw, 54px);
+      font-size: var(--title-size, clamp(28px, 5.8vw, 54px));
       line-height: 1.1;
       text-wrap: balance;
+      word-break: keep-all;
     }
 
     .meta-line {
@@ -217,9 +218,93 @@
       border-bottom: 1px solid rgba(99, 121, 179, 0.2);
     }
 
-    audio {
+    .native-audio {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .custom-player {
+      display: grid;
+      gap: 12px;
+      border: 1px solid rgba(99, 121, 179, 0.3);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(13, 22, 43, 0.76);
+    }
+
+    .player-main {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .play-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 1px solid rgba(94, 124, 211, 0.6);
+      background: radial-gradient(circle at 30% 30%, #3f69ff, #1b2f81);
+      color: #f0f5ff;
+      font-size: 23px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 12px 26px rgba(42, 77, 184, 0.42);
+    }
+
+    .timeline-wrap {
+      display: grid;
+      gap: 7px;
+    }
+
+    .timeline-head {
+      display: flex;
+      justify-content: space-between;
+      color: #9ab0e8;
+      font-size: 13px;
+      letter-spacing: 0.03em;
+    }
+
+    .seek {
       width: 100%;
-      border-radius: 12px;
+      margin: 0;
+      accent-color: #3b64ff;
+      cursor: pointer;
+    }
+
+    .player-sub {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .field {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #aabbe7;
+      font-size: 13px;
+    }
+
+    .field select,
+    .field input[type="range"] {
+      background: rgba(16, 25, 47, 0.95);
+      border: 1px solid rgba(88, 110, 167, 0.55);
+      border-radius: 8px;
+      color: #dce6ff;
+      height: 30px;
+      padding: 0 8px;
+    }
+
+    .field input[type="range"] {
+      width: 132px;
+      padding: 0;
+      accent-color: #3b64ff;
     }
 
     .controls {
@@ -342,6 +427,20 @@
       .meta-line {
         font-size: 13px;
       }
+
+      .play-btn {
+        width: 46px;
+        height: 46px;
+        font-size: 20px;
+      }
+
+      .player-main {
+        grid-template-columns: 1fr;
+      }
+
+      .player-sub {
+        justify-content: flex-start;
+      }
     }
   </style>
 </head>
@@ -378,10 +477,38 @@
         <p id="summaryText" class="summary">오늘의 기술 브리핑을 준비하는 중입니다.</p>
 
         <div class="player-wrap">
-          <audio id="player" controls preload="none">
+          <audio id="player" class="native-audio" preload="none">
             <source id="source" src="" type="audio/mpeg" />
             브라우저에서 오디오를 재생할 수 없습니다.
           </audio>
+          <div class="custom-player" role="group" aria-label="오디오 플레이어">
+            <div class="player-main">
+              <button id="playPauseBtn" class="play-btn" type="button" aria-label="재생">▶</button>
+              <div class="timeline-wrap">
+                <div class="timeline-head">
+                  <span id="currentTimeText">0:00</span>
+                  <span id="totalTimeText">0:00</span>
+                </div>
+                <input id="seekBar" class="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="재생 위치" />
+              </div>
+            </div>
+            <div class="player-sub">
+              <label class="field" for="speedSelect">
+                <span>배속</span>
+                <select id="speedSelect" aria-label="재생 속도">
+                  <option value="0.75">0.75x</option>
+                  <option value="1" selected>1.0x</option>
+                  <option value="1.25">1.25x</option>
+                  <option value="1.5">1.5x</option>
+                  <option value="2">2.0x</option>
+                </select>
+              </label>
+              <label class="field" for="volumeBar">
+                <span>볼륨</span>
+                <input id="volumeBar" type="range" min="0" max="1" step="0.01" value="1" aria-label="볼륨" />
+              </label>
+            </div>
+          </div>
           <div class="controls">
             <a id="download" class="btn primary" href="#" rel="noopener">MP3 다운로드</a>
             <button id="shareBtn" class="btn" type="button">링크 복사</button>
@@ -412,9 +539,79 @@
       return y + "-" + m + "-" + d;
     }
 
+    function formatTime(seconds) {
+      if (!Number.isFinite(seconds) || seconds < 0) {
+        return "0:00";
+      }
+      const total = Math.floor(seconds);
+      const m = Math.floor(total / 60);
+      const s = String(total % 60).padStart(2, "0");
+      return m + ":" + s;
+    }
+
     function setStatus(message, isError) {
       statusEl.textContent = message;
       statusEl.classList.toggle("error", Boolean(isError));
+    }
+
+    function updatePlayPauseButton() {
+      if (audioEl.paused) {
+        playPauseBtnEl.textContent = "▶";
+        playPauseBtnEl.setAttribute("aria-label", "재생");
+      } else {
+        playPauseBtnEl.textContent = "❚❚";
+        playPauseBtnEl.setAttribute("aria-label", "일시정지");
+      }
+    }
+
+    function syncTimeUi() {
+      const duration = Number.isFinite(audioEl.duration) ? audioEl.duration : 0;
+      const current = Number.isFinite(audioEl.currentTime) ? audioEl.currentTime : 0;
+      currentTimeTextEl.textContent = formatTime(current);
+      totalTimeTextEl.textContent = formatTime(duration);
+      if (duration > 0) {
+        seekBarEl.value = String(Math.round((current / duration) * 1000));
+        if (durationTextEl.dataset.metaDuration !== "1") {
+          durationTextEl.textContent = formatTime(duration);
+        }
+      } else {
+        seekBarEl.value = "0";
+      }
+    }
+
+    function updateTitleScale() {
+      if (!titleTextEl) {
+        return;
+      }
+
+      const textLength = titleTextEl.textContent.trim().length || 1;
+      const containerWidth = titleTextEl.parentElement ? titleTextEl.parentElement.clientWidth : titleTextEl.clientWidth;
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+      const minSize = isMobile ? 26 : 30;
+      const maxSize = isMobile ? 44 : 56;
+      let size = maxSize;
+
+      if (textLength > 20) size -= 6;
+      if (textLength > 32) size -= 7;
+      if (textLength > 45) size -= 7;
+      if (textLength > 60) size -= 4;
+
+      size = size * Math.min(1.12, Math.max(0.74, containerWidth / 620));
+      size = Math.max(minSize, Math.min(maxSize, size));
+
+      titleTextEl.style.setProperty("--title-size", size.toFixed(1) + "px");
+
+      const maxLines = isMobile ? 3.9 : 3.3;
+      let adjustCount = 0;
+      while (adjustCount < 28 && size > minSize) {
+        const maxHeight = size * 1.1 * maxLines;
+        if (titleTextEl.scrollHeight <= maxHeight) {
+          break;
+        }
+        size -= 1;
+        titleTextEl.style.setProperty("--title-size", size.toFixed(1) + "px");
+        adjustCount += 1;
+      }
     }
 
     function renderTags(tagList) {
@@ -451,7 +648,8 @@
       const subtitle = safe.subtitle || "DAILY DEVELOPER BRIEFING";
       const episode = safe.episode || "#00";
       const host = safe.host || brand;
-      const duration = safe.duration || "--:--";
+      const hasDuration = typeof safe.duration === "string" && safe.duration.trim().length > 0;
+      const duration = hasDuration ? safe.duration : "--:--";
       const summary = safe.summary || "오늘의 기술 브리핑을 준비하는 중입니다.";
       const footerNote = safe.footerNote || "";
       const logoText = safe.logoText || "DB";
@@ -464,10 +662,12 @@
       summaryTextEl.textContent = summary;
       footerNoteEl.textContent = footerNote;
       durationTextEl.textContent = duration;
+      durationTextEl.dataset.metaDuration = hasDuration ? "1" : "0";
       logoTextEl.textContent = logoText;
 
       renderTags(safe.tags);
       applyCoverImage(safe.coverImage);
+      requestAnimationFrame(updateTitleScale);
     }
 
     const params = new URLSearchParams(window.location.search);
@@ -496,11 +696,22 @@
     const sourceEl = document.getElementById("source");
     const downloadEl = document.getElementById("download");
     const shareBtnEl = document.getElementById("shareBtn");
+    const playPauseBtnEl = document.getElementById("playPauseBtn");
+    const currentTimeTextEl = document.getElementById("currentTimeText");
+    const totalTimeTextEl = document.getElementById("totalTimeText");
+    const seekBarEl = document.getElementById("seekBar");
+    const speedSelectEl = document.getElementById("speedSelect");
+    const volumeBarEl = document.getElementById("volumeBar");
 
     dateTextEl.textContent = finalDate;
     sourceEl.src = audioUrl;
     downloadEl.href = audioUrl;
+    audioEl.volume = Number(volumeBarEl.value);
+    audioEl.playbackRate = Number(speedSelectEl.value);
     audioEl.load();
+    updatePlayPauseButton();
+    syncTimeUi();
+    updateTitleScale();
 
     const canonicalUrl = new URL(window.location.href);
     canonicalUrl.searchParams.set("date", finalDate);
@@ -515,16 +726,71 @@
       }
     });
 
-    audioEl.addEventListener("canplay", function () {
+    playPauseBtnEl.addEventListener("click", async function () {
+      try {
+        if (audioEl.paused) {
+          await audioEl.play();
+        } else {
+          audioEl.pause();
+        }
+      } catch (error) {
+        setStatus("재생을 시작하지 못했습니다. 브라우저 권한을 확인해 주세요.", true);
+      }
+    });
+
+    seekBarEl.addEventListener("input", function () {
+      if (!Number.isFinite(audioEl.duration) || audioEl.duration <= 0) {
+        return;
+      }
+      const nextTime = (Number(seekBarEl.value) / 1000) * audioEl.duration;
+      audioEl.currentTime = nextTime;
+      syncTimeUi();
+    });
+
+    speedSelectEl.addEventListener("change", function () {
+      audioEl.playbackRate = Number(speedSelectEl.value);
+    });
+
+    volumeBarEl.addEventListener("input", function () {
+      audioEl.volume = Number(volumeBarEl.value);
+    });
+
+    audioEl.addEventListener("loadedmetadata", function () {
+      syncTimeUi();
       setStatus("재생 준비 완료: " + finalDate, false);
+    });
+
+    audioEl.addEventListener("timeupdate", function () {
+      syncTimeUi();
+    });
+
+    audioEl.addEventListener("play", function () {
+      updatePlayPauseButton();
+    });
+
+    audioEl.addEventListener("pause", function () {
+      updatePlayPauseButton();
+    });
+
+    audioEl.addEventListener("ended", function () {
+      updatePlayPauseButton();
+      seekBarEl.value = "0";
+      currentTimeTextEl.textContent = "0:00";
     });
 
     audioEl.addEventListener("error", function () {
       setStatus("오디오를 불러오지 못했습니다. 파일 경로를 확인해 주세요.", true);
+      updatePlayPauseButton();
     });
 
     coverImageEl.addEventListener("error", function () {
       applyCoverImage("");
+    });
+
+    let resizeTimer = null;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateTitleScale, 100);
     });
 
     async function loadMeta() {
