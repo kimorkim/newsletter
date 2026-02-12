@@ -84,16 +84,24 @@
       gap: 8px;
     }
 
-    .icon {
-      width: 34px;
-      height: 34px;
+    .prev-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 12px;
       border: 1px solid var(--line);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-size: 12px;
-      color: var(--muted);
+      border-radius: 999px;
       background: rgba(13, 20, 38, 0.7);
+      color: #c8d7ff;
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 1.2;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .prev-link:hover {
+      border-color: rgba(110, 139, 221, 0.6);
+      background: rgba(21, 31, 57, 0.9);
     }
 
     .hero {
@@ -428,6 +436,11 @@
         font-size: 13px;
       }
 
+      .prev-link {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+
       .play-btn {
         width: 46px;
         height: 46px;
@@ -450,6 +463,14 @@
       <div class="brand">
         <div id="logoText" class="logo">TP</div>
         <span id="brandText">Daily Briefing</span>
+      </div>
+      <div class="actions">
+        <a
+          class="prev-link"
+          href="https://soop2.tplinkdns.com/webhook/prev_newsletter"
+          target="_blank"
+          rel="noopener noreferrer"
+        >이전 뉴스레터 보기</a>
       </div>
     </header>
 
