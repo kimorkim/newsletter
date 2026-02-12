@@ -161,6 +161,8 @@
     }
 
     .cover-img {
+      position: relative;
+      z-index: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -168,11 +170,97 @@
     }
 
     .placeholder {
+      position: relative;
+      z-index: 0;
       display: grid;
       gap: 8px;
       place-items: center;
       color: #7d96ff;
       opacity: 0.75;
+    }
+
+    .cover-wrap.has-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(to bottom, rgba(6, 11, 24, 0.2), rgba(6, 11, 24, 0.36)),
+        radial-gradient(circle at 50% 52%, rgba(23, 38, 86, 0.46), rgba(7, 12, 27, 0.1) 58%, rgba(7, 12, 27, 0.24));
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .cover-overlay {
+      position: absolute;
+      left: 50%;
+      top: 54%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      pointer-events: none;
+      display: grid;
+      gap: 8px;
+      place-items: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      text-shadow: 0 3px 16px rgba(7, 12, 26, 0.85);
+      isolation: isolate;
+    }
+
+    .cover-wrap.has-image .cover-overlay {
+      opacity: 0.98;
+    }
+
+    .cover-overlay .bars {
+      gap: 6px;
+      filter: drop-shadow(0 0 10px rgba(75, 116, 255, 0.55));
+    }
+
+    .cover-overlay .bars span {
+      width: 9px;
+      background: rgba(95, 129, 255, 0.98);
+      box-shadow: 0 0 22px rgba(66, 108, 255, 0.65);
+      transform-origin: center bottom;
+      animation: coverWave 1.05s ease-in-out infinite alternate;
+      animation-play-state: paused;
+    }
+
+    .cover-overlay-label {
+      font-size: 22px;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: rgba(218, 228, 255, 0.82);
+      text-shadow: 0 2px 12px rgba(7, 12, 26, 0.6);
+    }
+
+    .cover-wrap.no-image .cover-overlay {
+      opacity: 0;
+    }
+
+    .cover-wrap.is-playing .cover-overlay .bars span {
+      animation-play-state: running;
+    }
+
+    .cover-overlay .bars span:nth-child(1) { animation-duration: 0.88s; animation-delay: -0.42s; }
+    .cover-overlay .bars span:nth-child(2) { animation-duration: 1.02s; animation-delay: -0.66s; }
+    .cover-overlay .bars span:nth-child(3) { animation-duration: 0.82s; animation-delay: -0.22s; }
+    .cover-overlay .bars span:nth-child(4) { animation-duration: 1.18s; animation-delay: -0.84s; }
+    .cover-overlay .bars span:nth-child(5) { animation-duration: 0.92s; animation-delay: -0.33s; }
+    .cover-overlay .bars span:nth-child(6) { animation-duration: 1.14s; animation-delay: -0.74s; }
+    .cover-overlay .bars span:nth-child(7) { animation-duration: 0.86s; animation-delay: -0.21s; }
+    .cover-overlay .bars span:nth-child(8) { animation-duration: 1.06s; animation-delay: -0.57s; }
+    .cover-overlay .bars span:nth-child(9) { animation-duration: 0.9s; animation-delay: -0.38s; }
+
+    @keyframes coverWave {
+      0% {
+        transform: scaleY(0.5);
+        opacity: 0.82;
+      }
+      100% {
+        transform: scaleY(1.18);
+        opacity: 1;
+      }
     }
 
     .bars {
@@ -432,6 +520,14 @@
         aspect-ratio: 16 / 8;
       }
 
+      .cover-overlay {
+        top: 56%;
+      }
+
+      .cover-overlay-label {
+        font-size: 16px;
+      }
+
       .meta-line {
         font-size: 13px;
       }
@@ -482,7 +578,7 @@
 
     <section class="card">
       <div class="card-main">
-        <div class="cover-wrap">
+        <div class="cover-wrap no-image">
           <img id="coverImage" class="cover-img" alt="오디오 커버 이미지" />
           <div id="coverPlaceholder" class="placeholder" aria-hidden="true">
             <div class="bars">
@@ -490,6 +586,13 @@
               <span></span><span></span><span></span><span></span>
             </div>
             <small>PODCAST</small>
+          </div>
+          <div class="cover-overlay" aria-hidden="true">
+            <div class="bars">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <span class="cover-overlay-label">PODCAST</span>
           </div>
         </div>
 
@@ -585,6 +688,10 @@
       }
     }
 
+    function updateCoverWavePlaying() {
+      coverWrapEl.classList.toggle("is-playing", !audioEl.paused && !audioEl.ended);
+    }
+
     function syncTimeUi() {
       const duration = Number.isFinite(audioEl.duration) ? audioEl.duration : 0;
       const current = Number.isFinite(audioEl.currentTime) ? audioEl.currentTime : 0;
@@ -653,11 +760,15 @@
         coverImageEl.src = url;
         coverImageEl.style.display = "block";
         coverPlaceholderEl.style.display = "none";
+        coverWrapEl.classList.add("has-image");
+        coverWrapEl.classList.remove("no-image");
         return;
       }
       coverImageEl.removeAttribute("src");
       coverImageEl.style.display = "none";
       coverPlaceholderEl.style.display = "grid";
+      coverWrapEl.classList.remove("has-image");
+      coverWrapEl.classList.add("no-image");
     }
 
     function applyMeta(meta) {
@@ -712,6 +823,7 @@
     const durationTextEl = document.getElementById("durationText");
     const coverImageEl = document.getElementById("coverImage");
     const coverPlaceholderEl = document.getElementById("coverPlaceholder");
+    const coverWrapEl = document.querySelector(".cover-wrap");
     const statusEl = document.getElementById("status");
     const audioEl = document.getElementById("player");
     const sourceEl = document.getElementById("source");
@@ -731,6 +843,7 @@
     audioEl.playbackRate = Number(speedSelectEl.value);
     audioEl.load();
     updatePlayPauseButton();
+    updateCoverWavePlaying();
     syncTimeUi();
     updateTitleScale();
 
@@ -787,14 +900,17 @@
 
     audioEl.addEventListener("play", function () {
       updatePlayPauseButton();
+      updateCoverWavePlaying();
     });
 
     audioEl.addEventListener("pause", function () {
       updatePlayPauseButton();
+      updateCoverWavePlaying();
     });
 
     audioEl.addEventListener("ended", function () {
       updatePlayPauseButton();
+      updateCoverWavePlaying();
       seekBarEl.value = "0";
       currentTimeTextEl.textContent = "0:00";
     });
@@ -802,6 +918,7 @@
     audioEl.addEventListener("error", function () {
       setStatus("오디오를 불러오지 못했습니다. 파일 경로를 확인해 주세요.", true);
       updatePlayPauseButton();
+      updateCoverWavePlaying();
     });
 
     coverImageEl.addEventListener("error", function () {
