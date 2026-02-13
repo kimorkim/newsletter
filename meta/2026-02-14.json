@@ -1,0 +1,14 @@
+{
+  "date": "2026-02-14",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "이번주 개발 소식: 콘텐츠 전송 최적화(ZXC), AI 프롬프트 인젝션 방어, GPT‑5.3·MinIO 이슈",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#17",
+  "host": "Qwen-TTS",
+  "duration": 391.920,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-02-14.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
