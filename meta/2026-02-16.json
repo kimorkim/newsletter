@@ -1,0 +1,14 @@
+{
+  "date": "2026-02-16",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "동적 OG 이미지 함정·React/TS 스프린트·Zig io_uring 등 실무 중심 개발자 주간 요약",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#19",
+  "host": "Qwen-TTS",
+  "duration": 432.799,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-02-16.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
