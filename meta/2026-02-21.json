@@ -1,0 +1,14 @@
+{
+  "date": "2026-02-21",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "개발자 주간 뉴스: CIA 유출 Git 원라이너·웹 접근성 개선·GGML의 Hugging Face 합류",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#24",
+  "host": "Qwen-TTS",
+  "duration": 271.200,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-02-21.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
