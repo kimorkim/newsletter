@@ -1,0 +1,14 @@
+{
+  "date": "2026-02-22",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "셀프호스팅으로 API 비용 절감·Cloudflare BGP 장애·LLM·CI 자동화 — 이번주 개발자 핵심 요약",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#25",
+  "host": "Qwen-TTS",
+  "duration": 449.479,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-02-22.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
