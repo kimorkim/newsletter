@@ -1,0 +1,14 @@
+{
+  "date": "2026-02-23",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "실무 중심 AI·인프라 최신: NVMe-direct Llama 3.1(70B) 실행부터 에이전트·임베디드·보안 사례까지",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#26",
+  "host": "Qwen-TTS",
+  "duration": 282.640,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-02-23.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
