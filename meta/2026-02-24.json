@@ -1,0 +1,14 @@
+{
+  "date": "2026-02-24",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "개발자 주간 하이라이트: WARN 해고 DB · Rust 기반 JS 컴파일러 · PgDog로 Postgres 확장",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#27",
+  "host": "Qwen-TTS",
+  "duration": 395.760,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-02-24.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
