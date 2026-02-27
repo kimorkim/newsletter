@@ -1,0 +1,14 @@
+{
+  "date": "2026-02-28",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "Django 멀티버전 테스트·Rust 성능·AI 에이전트 운영 — 실무 개발자 요약",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#31",
+  "host": "Qwen-TTS",
+  "duration": 231.064,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-02-28.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
