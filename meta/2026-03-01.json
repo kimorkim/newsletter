@@ -1,0 +1,14 @@
+{
+  "date": "2026-03-01",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "개발자용 요약: Rust 단일 바이너리 도구, AI 에이전트 보안·패스키 주의",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#32",
+  "host": "SuperTonic",
+  "duration": 186.159,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-03-01.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
