@@ -1,0 +1,14 @@
+{
+  "date": "2026-03-19",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "개발자의 성장을 위한 최신 기술 트렌드 및 실전 인사이트 모음",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#50",
+  "host": "SuperTonic",
+  "duration": 215.141,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-03-19.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
