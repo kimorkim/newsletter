@@ -1,0 +1,14 @@
+{
+  "date": "2026-05-06",
+  "brand": "Daily Briefing",
+  "buildLabel": "LIVE BUILD v1.0.0",
+  "title": "Bun의 Zig에서 Rust로의 전환부터 AI 프레임워크 비교까지: 5월 1주차 개발자 리포트",
+  "subtitle": "오늘의 기술 뉴스",
+  "episode": "#94",
+  "host": "SuperTonic",
+  "duration": 169.210,
+  "coverImage": "https://raw.githubusercontent.com/kimorkim/newsletter/main/image/2026-05-06.png",
+  "summary": "오늘의 핵심 기술 이슈를 10분 안에 정리합니다.",
+  "tags": [],
+  "footerNote": ""
+}
